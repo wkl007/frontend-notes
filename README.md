@@ -1,2 +1,2 @@
 # frontend-notes
-前端复习笔记
+前端学习笔记
