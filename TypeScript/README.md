@@ -74,7 +74,13 @@ let getAge = function () {
 test`hello my name is ${myname}, I'm ${getAge()}`
 ```
 
-#### 4.2 TypeScript-参数类型
+#### 4.2 参数新特性
+
+- 参数类型
+- 默认参数
+- 可选参数
+
+##### 4.2.1 参数类型
 
 在参数名称后面使用冒号来指定参数的类型
 
@@ -90,13 +96,13 @@ test`hello my name is ${myname}, I'm ${getAge()}`
 - Never
 - Object
 
-##### 4.2.1 布尔值
+###### 4.2.1.1 布尔值
 
 ```typescript
 let isDone: boolean = false
 ```
 
-##### 4.2.2 数字
+###### 4.2.1.2 数字
 
 ```typescript
 let decLiteral: number = 6;
@@ -105,21 +111,21 @@ let binaryLiteral: number = 0b1010;
 let octalLiteral: number = 0o744;
 ```
 
-##### 4.2.3 字符串
+###### 4.2.1.3 字符串
 
 ```typescript
 let name: string = "bob";
 name = "smith";
 ```
 
-##### 4.2.4 数组
+###### 4.2.1.4 数组
 
 ```typescript
 let list: number[] = [1, 2, 3];
 let list: Array<number> = [1, 2, 3];
 ```
 
-##### 4.2.5 元组
+###### 4.2.1.5 元组
 
 ```typescript
 let x: [string, number];
@@ -127,14 +133,14 @@ x = ['hello', 10]; // OK
 x = [10, 'hello']; // Error
 ```
 
-##### 4.2.6 枚举
+###### 4.2.1.6 枚举
 
 ```typescript
 enum Color {Red, Green, Blue}
 let c: Color = Color.Green;
 ```
 
-##### 4.2.7 Any
+###### 4.2.1.7 Any
 
 ```typescript
 let notSure: any = 4;
@@ -142,7 +148,7 @@ notSure = "maybe a string instead";
 notSure = false; // okay, definitely a boolean
 ```
 
-##### 4.2.8 Void
+###### 4.2.1.8 Void
 
 ```typescript
 function warnUser(): void {
@@ -150,7 +156,7 @@ function warnUser(): void {
 }
 ```
 
-##### 4.2.9 Null和Undefined
+###### 4.2.1.9 Null和Undefined
 
 ```typescript
 // Not much else we can assign to these variables!
@@ -158,7 +164,7 @@ let u: undefined = undefined;
 let n: null = null;
 ```
 
-##### 4.2.10 Never
+###### 4.2.1.10 Never
 
 `never`类型表示的是那些永不存在的值的类型。
 
@@ -169,7 +175,7 @@ function error(message: string): never {
 }
 ```
 
-##### 4.2.11 Object
+###### 4.2.1.11 Object
 
 `object`表示非原始类型，也就是除`number`，`string`，`boolean`，`symbol`，`null`或`undefined`之外的类型。
 
@@ -180,7 +186,7 @@ create({ prop: 0 }); // OK
 create(null); // OK
 ```
 
-#### 4.3 TypeScript-默认参数
+##### 4.2.2 默认参数
 
 在参数声明后面使用等号来指定参数的默认值。在方法中声明默认参数时必须放在最后面。
 
@@ -192,7 +198,7 @@ function defaultValue (a: string, b: string, c: string = 'wkl') {
 defaultValue('a', 'b')
 ```
 
-#### 4.4 TypeScript-可选参数
+##### 4.2.3 可选参数
 
 在方法的参数声明后面用问号来标明词参数为可选参数。可选参数不能声明在必选参数后面。
 
@@ -204,3 +210,178 @@ function optionalValue (a: string, b?: string, c: string = 'wkl') {
 optionalValue('a')
 ```
 
+#### 4.3 函数新特性
+
+- Rest and Spread 操作符
+- generator函数
+
+##### 4.3.1 Rest and Spread 操作符
+
+用来声明任意数量的方法参数
+
+```typescript
+function func1 (...args) {
+  args.forEach(i => {
+    console.log(i)
+  })
+}
+
+function func2 (a, b, c) {
+  console.log(a, b, c)
+}
+
+var args = [1, 2]
+// @ts-ignore
+func2(...args)
+```
+
+##### 4.3.2 generator函数
+
+控制函数的执行过程，手动暂停和恢复代码执行
+
+```typescript
+function * doSomething () {
+  console.log('start')
+  yield
+  console.log('finish')
+}
+
+let do1 = doSomething()
+
+// @ts-ignore
+do1.next()//start
+// @ts-ignore
+do1.next()//finish
+```
+
+##### 4.3.2 destructuring析构表达式
+
+通过表达式将对象或数组拆分成任意数量的变量
+
+```typescript
+//对象
+function getStock () {
+  return {
+    code: 'IBM',
+    price: {
+      price1: 200,
+      price2: 100
+    },
+    aaa: 1,
+    bbb: 2
+  }
+}
+
+let { code, price, price: { price1, price2 } } = getStock()
+
+//数组
+let arr = [1, 2, 3, 4]
+
+let [number1, number2] = arr//1 2
+let [, , number1, number2] = arr//3 4
+let [number1, , , number2] = arr//1 4
+let [number1, number2, ...others] = arr//1 2 3 4
+
+function test1 ([number1, number2, ...others]) {
+  console.log(number1, number2, others)
+}
+
+// @ts-ignore
+test1(arr)
+```
+
+####  4.4 表达式与循环
+
+- 箭头表达式
+
+- for of 循环
+
+##### 4.4.1 箭头表达式
+
+用来声明匿名函数，消除传统匿名函数的this指向问题
+
+```typescript
+let sum = (arg1, arg2) => arg1 + arg2
+
+let myArray = [1, 2, 3, 4, 5]
+console.log(myArray.filter(value => value % 2 === 0))
+```
+
+##### 4.4.1 for of循环
+
+`forEach()`、 `for in`、 `for of`
+
+```typescript
+let arr1 = [1, 2, 3, 4]
+
+arr1.forEach(i => console.log(i))
+
+for (let i in arr1) {
+  console.log(arr1[i])
+}
+
+for (let i of arr1) {
+  if (i > 2) break
+  console.log(i)
+}
+```
+
+#### 4.4 面向对象特性
+
+- 类
+- 泛型
+- 接口
+- 模块
+- 注解
+- 类型定义文件
+
+##### 4.4.1 类
+
+类是TypeScript的核心，使用TypeScript开发时，大部分代码都是写在类里面的。
+
+```typescript
+class Person {
+  constructor (public name: string, public age: number) {}
+  eat () {
+    console.log(`${this.name},I am eating`)
+  }
+}
+
+class Child extends Person {
+  constructor (name: string, code: number) {
+    super(name, code)
+    this.code = code
+  }
+  code: number
+  work () {
+    super.eat()
+    console.log(`I am working`)
+  }
+}
+
+let p1 = new Person('wkl', 12)
+p1.eat()
+
+let p2 = new Person('wkl2', 20)
+p2.eat()
+
+let c1 = new Child('wkl3', 22)
+c1.eat()
+c1.work()
+```
+
+
+
+利用extends关键字继承父类所有的属性和方法（class childBall extends Ball{ }）
+在子类的构造函数中调用super（）可以继承父类构造函数里面的属性
+在子类方法中调用 super.（父类方法）可以实现子类继承父类的方法
+
+##### 4.4.2 泛型
+
+##### 4.4.3 接口
+
+##### 4.4.4 模块
+
+##### 4.4.5 注解
+
+##### 4.4.6 类型定义文件
