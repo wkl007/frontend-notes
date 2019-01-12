@@ -111,6 +111,7 @@ for (let i of arr1) {
 class Person {
   constructor (public name: string, public age: number) {
   }
+
   eat () {
     console.log(`${this.name},I am eating`)
   }
@@ -121,7 +122,9 @@ class Child extends Person {
     super(name, code)
     this.code = code
   }
+
   code: number
+
   work () {
     super.eat()
     console.log(`I am working`)
@@ -137,3 +140,36 @@ p2.eat()
 let c1 = new Child('wkl3', 22)
 c1.eat()
 c1.work()
+
+let workers: Array<Person> = []
+workers[0] = new Person('张三', 21)
+workers[1] = new Person('李四', 21)
+
+interface IPerson {
+  name: string,
+  age: number
+}
+
+class Person2 {
+  constructor (public config: IPerson) {
+  }
+}
+
+let person = new Person2({ name: '张三', age: 12 })
+
+interface Animal {
+  eat ()
+}
+
+class Sheep implements Animal {
+  eat () {
+    console.log('I am eating')
+  }
+}
+
+class Tiger implements Animal {
+  eat () {
+    console.log('I am eating')
+  }
+}
+

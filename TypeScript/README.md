@@ -335,7 +335,7 @@ for (let i of arr1) {
 - 注解
 - 类型定义文件
 
-##### 4.4.1 类
+##### 4.4.1 类（class）
 
 类是TypeScript的核心，使用TypeScript开发时，大部分代码都是写在类里面的。
 
@@ -376,12 +376,60 @@ c1.work()
 在子类的构造函数中调用super（）可以继承父类构造函数里面的属性
 在子类方法中调用 super.（父类方法）可以实现子类继承父类的方法
 
-##### 4.4.2 泛型
+##### 4.4.2 泛型（generic）
 
-##### 4.4.3 接口
+参数化的类型，一般用来限制集合的内容。
 
-##### 4.4.4 模块
+```typescript
+...
+let workers: Array<Person> = []
+workers[0] = new Person('张三', 21)
+workers[1] = new Person('李四', 21)
+```
 
-##### 4.4.5 注解
+##### 4.4.3 接口（inerface）
 
-##### 4.4.6 类型定义文件
+用来建立某种代码约定，使得其他开发者在调用某个方法或创建新的类时必须遵循接口所定义的代码约定。
+
+```typescript
+interface IPerson {
+  name: string,
+  age: number
+}
+class Person2 {
+  constructor (public config: IPerson) {}
+}
+let person = new Person2({ name: '张三', age: 12 })
+
+interface Animal {
+  eat ()
+}
+class Sheep implements Animal {
+  eat () {
+    console.log('I am eating')
+  }
+}
+class Tiger implements Animal {
+  eat () {
+    console.log('I am eating')
+  }
+}
+```
+
+##### 4.4.4 模块（Module）
+
+模块可以帮助开发者将代码分割为可重用的单元。开发者可以自己决定将模块中的哪些资源（类、方法、变量）暴露出去供外部使用，哪些资源只在模块内使用。
+
+`export` `import`
+
+##### 4.4.5 注解（annotation）
+
+注解为程序的元素（类、方法、变量）加上更直观明了的说明，这些说明与程序的业务逻辑无关，而是供指定的工具或框架使用。
+
+`@xxx`
+
+##### 4.4.6 类型定义文件（*.d.ts）
+
+类型定义文件用来帮助开发者在TypeScript中使用已有的JavaScript的工具包。如：jquery
+
+TypeScript 现在已经可以通过 npm install @types/库名 来安装类型定义文件了，这样可以把ts项目所需要的定义文件描述到npm包里，维护起来更加方便。
