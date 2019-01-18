@@ -937,3 +937,98 @@ methodsToPatch.forEach(function (method) {
 
 对于实现 macrotasks ，会先判断是否能使用 `setImmediate` ，不能的话降级为 `MessageChannel` ，以上都不行的话就使用 `setTimeout`
 
+### 12. React常考知识点
+
+#### 12.1 生命周期
+
+在 V16 版本中引入了 Fiber 机制。这个机制一定程度上的影响了部分生命周期的调用，并且也引入了新的 2 个 API 来解决问题。
+
+React16废弃的三个生命周期函数
+
+- componentWillMount
+- componentWillReceiveProps
+- componentWillUpdate
+
+![生命周期图解](https://user-gold-cdn.xitu.io/2018/8/12/16529f7518a0d615?imageView2/1/w/1304/h/734/q/85/format/webp/interlace/1)
+
+我们将React的生命周期分为三个阶段，然后详细讲解每个阶段具体调用了什么函数，这三个阶段是：
+
+- 挂载阶段
+- 更新阶段
+- 卸载阶段
+
+##### 12.1.1 挂载阶段
+
+挂载阶段，也可以理解为组件的初始化阶段，就是将我们的组件插入到DOM中，只会发生一次
+
+这个阶段的生命周期函数调用如下：
+
+- constructor
+- static getDerivedStateFromProps
+- render
+- componentDidMount
+
+##### 12.1.2 更新阶段
+
+更新阶段，当组件的props改变了，或组件内部调用了setState或者forceUpdate发生，会发生多次
+
+这个阶段的生命周期函数调用如下：
+
+- static getDerivedStateFromProps
+- shouldComponentUpdate
+- render
+- getSnapshotBeforeUpdate
+- componentDidUpdate
+
+##### 12.1.3 卸载阶段
+
+卸载阶段，当我们的组件被卸载或者销毁了
+
+这个阶段的生命周期函数只有一个：
+
+- componentWillUnmount
+
+#### 12.2 setState
+
+`setState` 在 React 中是经常使用的一个 API，但是它存在一些的问题经常会导致初学者出错，核心原因就是因为这个 API 是异步的。
+
+首先 `setState` 的调用并不会马上引起 `state` 的改变，并且如果你一次调用了多个 `setState` ，那么结果可能并不如你期待的一样。
+
+解决方法：
+
+```jsx
+//方法一
+this.setState({
+  load: !this.state.load,
+  count: this.state.count + 1
+}, () => {
+    console.log(this.state.count);
+    console.log('加载完成')
+});
+//方法二
+this.setState((prevState, props) => {
+  return{
+    //需要改变的state的名称: 改变之后的state的值
+  }
+})
+
+```
+
+#### 12.4 性能优化
+
+> PS：下文中的 state 指代了 state 及 props
+
+在 `shouldComponentUpdate` 函数中我们可以通过返回布尔值来决定当前组件是否需要更新。这层代码逻辑可以是简单地浅比较一下当前 `state` 和之前的 `state` 是否相同，也可以是判断某个值更新了才触发组件更新。一般来说不推荐完整地对比当前 `state` 和之前的 `state` 是否相同，因为组件更新触发可能会很频繁，这样的完整对比性能开销会有点大，可能会造成得不偿失的情况。
+
+当然如果真的想完整对比当前 `state` 和之前的 `state` 是否相同，并且不影响性能也是行得通的，可以通过 immutable 或者 immer 这些库来生成不可变对象。这类库对于操作大规模的数据来说会提升不错的性能，并且一旦改变数据就会生成一个新的对象，对比前后 `state` 是否一致也就方便多了，同时也很推荐阅读下 immer 的源码实现。
+
+另外如果只是单纯的浅比较一下，可以直接使用 `PureComponent`，底层就是实现了浅比较 `state`。
+
+#### 12.5 通信
+
+其实 React 中的组件通信基本和 Vue 中的一致。同样也分为以下三种情况：
+
+- 父子组件通信
+- 兄弟组件通信
+- 跨多层级组件通信
+- 任意组件
