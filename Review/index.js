@@ -1,5 +1,6 @@
 /**
- *
+ * 截流
+ * 适合大量事件按时间做平均分配触发
  * @param func
  * @param wait
  * @returns {Function}
@@ -17,6 +18,7 @@ export function throttle (func, wait) {
 
 /**
  * 防抖
+ * 适合多次事件一次响应的情况
  * @param func 用户传入需要防抖的函数
  * @param wait 等待时间
  * @returns {Function}
