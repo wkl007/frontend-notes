@@ -11,7 +11,7 @@
 
 ### 1.  课程介绍
 
-#### 课程收获
+#### 1.1 课程收获
 
 彻底学会Webpack的配置
 
@@ -27,5 +27,16 @@
 
 #### 2.1 Webpack究竟是什么？
 
+#### 2.2 什么是模块打包工具
 
+#### 2.3 Webpack的正确使用方式
+
+#### 2.4 使用Webpack的配置文件
+
+```javascript
+//使webpack自定义配置打包
+npx webpack --config webpackconfig.js
+```
+
+#### 2.5 浅析Webpack打包输入内容
 
