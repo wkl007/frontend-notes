@@ -142,11 +142,57 @@ loader的执行顺序是从下到上，从右到左
 
 > 使用[PostCSS](http://webpack.js.org/)处理CSS的[webpack的](http://postcss.org/)加载器
 
-autoprefixer
+`autoprefixer`使用
 
 > 添加css3前缀
 
+`css modules`使用
+
+```javascript
+{
+    loader: 'css-loader',
+    options: {
+        importLoaders: 2,//在 css-loader 前应用的 loader 的数量
+         modules: true
+    }
+},
+```
+
+打包字体文件
+
+```javascript
+{
+        test: /\.(eot|ttf|svg|woff)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            outputPath: 'fonts/'
+          }
+        }
+},
+```
+
 #### 3.3 使用plugins让打包更便捷
+
+> plugin可以在webpack运行到某个时刻的时候，帮你做一些事情
+
+`html-webpack-plugin`的使用
+
+> [`HtmlWebpackPlugin`](https://github.com/jantimon/html-webpack-plugin)简化了HTML文件的创建，以便为你的webpack包提供服务。这对于在文件名中包含每次会随着编译而发生变化哈希的 webpack bundle 尤其有用。 你可以让插件为你生成一个HTML文件，使用[lodash模板](https://lodash.com/docs#template)提供你自己的模板，或使用你自己的[loader](https://www.webpackjs.com/loaders)。
+>
+> 会在打包结束后，自动生成一个html文件，并把打包生成的js自动引入到这个html文件中
+
+```javascript
+plugins: [
+    new HtmlWebpackPlugin({
+      template: './index.html'
+    })
+  ]
+```
+
+`clean-webpack-plugin`的使用
+
+> 清空打包目录
 
 #### 3.4 Entry与Output的基础配置
 
