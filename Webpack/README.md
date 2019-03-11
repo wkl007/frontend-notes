@@ -196,9 +196,78 @@ plugins: [
 
 #### 3.4 Entry与Output的基础配置
 
+多个入口起点
+
+```javascript
+  entry: {
+    main: './src/index.js',
+    sub: './src/index.js'
+  },
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'dist')
+  },
+```
+
+使用CDN和资源hash的例子
+
+```
+output: {
+  path: "/home/proj/cdn/assets/[hash]",
+  publicPath: "http://cdn.example.com/assets/[hash]/"
+}
+```
+
 #### 3.5 SourceMap的配置
 
+> 它是一个映射关系，快速定位代码问题
+
+```javascript
+  mode: 'development',
+  devtool: 'cheap-module-eval-source-map',
+      
+  mode: 'production',
+  devtool: 'cheap-module-source-map',
+```
+
 #### 3.6 使用WebpackDevServer 提升开发效率
+
+监听文件变化
+
+1. watch方法
+
+```javascript
+"build": "webpack --watch"
+```
+
+2. webpack-dev-server
+
+```javascript
+  devServer: {
+    contentBase: './dist'
+  },
+```
+
+3. express
+
+```
+const express = require('express')
+const webpack = require('webpack')
+const webpackDevMiddleware = require('webpack-dev-middleware')
+const config = require('./webpack.config')
+
+const complier = webpack(config)
+
+const app = express()
+
+app.use(webpackDevMiddleware(complier, {}))
+
+app.listen(3000, () => {
+  console.log('server is running')
+})
+```
+
+
 
 #### 3.7 Hot Module Replacement 热模块更新
 
