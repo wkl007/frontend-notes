@@ -336,13 +336,19 @@ presets执行顺序：从下到上，从右到做
 
 #### 4.1 Tree Shaking 概念详解
 
+> *tree shaking* 是一个术语，通常用于描述移除 JavaScript 上下文中的未引用代码(dead-code)。它依赖于 ES2015 模块系统中的[静态结构特性](http://exploringjs.com/es6/ch_modules.html#static-module-structure)，例如 [`import`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) 和 [`export`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)。这个术语和概念实际上是兴起于 ES2015 模块打包工具 [rollup](https://github.com/rollup/rollup)。
+>
+> 新的 webpack 4 正式版本，扩展了这个检测能力，通过 `package.json` 的 `"sideEffects"` 属性作为标记，向 compiler 提供提示，表明项目中的哪些文件是 "pure(纯的 ES2015 模块)"，由此可以安全地删除文件中未使用的部分。
+
+
+
 #### 4.2 Development和Production模式的区分打包
 
 #### 4.3 Webpack和Code splitting
 
 #### 4.4 SplitChunksPlugin 配置参数详解
 
-#### 4.5 Lazy Loadin 懒加载，Chunk 是什么？
+#### 4.5 Lazy Loading 懒加载，Chunk 是什么？
 
 #### 4.6 打包分析，Preloading，Prefetching
 
