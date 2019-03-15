@@ -1,30 +1,19 @@
+const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const webpack = require('webpack')
 
-const path = require('path')
+function resolve (dir) {
+  return path.join(__dirname, '..', dir)
+}
 
 module.exports = {
-  // mode: 'development',
-  mode: 'production',
-  // devtool: 'cheap-module-eval-source-map',
-  devtool: 'cheap-module-source-map',
   entry: {
-    main: './src/index.js',
-  },
-  devServer: {
-    contentBase: './dist',
-    open: true,
-    port: '8090',
-    hot: true,//HMR
-    hotOnly: true,
-    proxy: {
-      '/api': 'http://localhost:3000'
-    }
+    // lodash: resolve('./src/lodash.js'),
+    main: resolve('./src/index.js'),
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'dist')
+    path: resolve('./dist')
   },
   module: {
     rules: [
@@ -80,10 +69,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html'
     }),
-    new CleanWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new CleanWebpackPlugin()
   ],
-  /*optimization: {
-    usedExports: true
-  }*/
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  }
 }

@@ -5,12 +5,15 @@
   "main": "src/index.js",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server --config build/webpack.dev.conf.js",
+    "dev-build": "webpack --config build/webpack.dev.conf.js",
+    "build": "webpack --config build/webpack.prod.conf.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.3.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.3.4",
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.4",
@@ -30,9 +33,12 @@
     "url-loader": "^1.1.2",
     "webpack-cli": "^3.2.3",
     "webpack-dev-middleware": "^3.6.1",
-    "webpack-dev-server": "^3.2.1"
+    "webpack-dev-server": "^3.2.1",
+    "webpack-merge": "^4.2.1"
   },
   "dependencies": {
+    "jquery": "^3.3.1",
+    "lodash": "^4.17.11",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "webpack": "^4.29.6"

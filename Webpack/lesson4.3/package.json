@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server --config build/webpack.dev.conf.js",
+    "dev-build": "webpack --config build/webpack.dev.conf.js",
+    "build": "webpack --config build/webpack.prod.conf.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +20,7 @@
     "@babel/runtime": "^7.3.4",
     "autoprefixer": "^9.4.10",
     "babel-loader": "^8.0.5",
+    "babel-plugin-dynamic-import-webpack": "^1.1.0",
     "clean-webpack-plugin": "^2.0.0",
     "css-loader": "^2.1.1",
     "express": "^4.16.4",
@@ -30,9 +33,11 @@
     "url-loader": "^1.1.2",
     "webpack-cli": "^3.2.3",
     "webpack-dev-middleware": "^3.6.1",
-    "webpack-dev-server": "^3.2.1"
+    "webpack-dev-server": "^3.2.1",
+    "webpack-merge": "^4.2.1"
   },
   "dependencies": {
+    "lodash": "^4.17.11",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "webpack": "^4.29.6"

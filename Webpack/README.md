@@ -340,19 +340,151 @@ presets执行顺序：从下到上，从右到做
 >
 > 新的 webpack 4 正式版本，扩展了这个检测能力，通过 `package.json` 的 `"sideEffects"` 属性作为标记，向 compiler 提供提示，表明项目中的哪些文件是 "pure(纯的 ES2015 模块)"，由此可以安全地删除文件中未使用的部分。
 
+webpack.config.js
 
+```javascript
+  optimization: {
+    usedExports: true
+  }
+```
+
+> 「副作用」的定义是，在导入时会执行特殊行为的代码，而不是仅仅暴露一个 export 或多个 export。举例说明，例如 polyfill，它影响全局作用域，并且通常不提供 export。
+
+package.json
+
+```
+{
+  "name": "your-project",
+  "sideEffects": false
+}
+```
 
 #### 4.2 Development和Production模式的区分打包
 
+| 选项        | 描述                                                         |
+| ----------- | ------------------------------------------------------------ |
+| development | 会将 `process.env.NODE_ENV` 的值设为 `development`。启用 `NamedChunksPlugin` 和 `NamedModulesPlugin`。 |
+| production  | 会将 `process.env.NODE_ENV` 的值设为 `production`。启用 `FlagDependencyUsagePlugin`, `FlagIncludedChunksPlugin`, `ModuleConcatenationPlugin`, `NoEmitOnErrorsPlugin`, `OccurrenceOrderPlugin`, `SideEffectsFlagPlugin` 和 `UglifyJsPlugin`. |
+
 #### 4.3 Webpack和Code splitting
+
+代码分离是 webpack 中最引人注目的特性之一。此特性能够把代码分离到不同的 bundle 中，然后可以按需加载或并行加载这些文件。代码分离可以用于获取更小的 bundle，以及控制资源加载优先级，如果使用合理，会极大影响加载时间。
+
+有三种常用的代码分离方法：
+
+- 入口起点：使用 [`entry`](https://www.webpackjs.com/configuration/entry-context) 配置手动地分离代码。 
+- 防止重复：使用 [SplitChunksPlugin](https://www.webpackjs.com/plugins/split-chunks-plugin/)去重和分离 chunk。
+- 动态导入：通过模块的内联函数调用来分离代码。
+
+##### 4.3.1 入口起点
+
+```javascript
+  entry: {
+    lodash: resolve('./src/lodash.js'),
+    main: resolve('./src/index.js'),
+  },
+  output: {
+    filename: '[name].js',
+    path: resolve('./dist')
+  },  
+```
+
+##### 4.3.2 防止重复
+
+```javascript
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  }   
+```
+
+##### 4.3.3 动态导入
+
+```javascript
+function getComponent () {
+  return import('lodash').then(_ => {
+    var element = document.createElement('div')
+    element.innerHTML = _.join(['a', 'b', 'c'], '$$$')
+    return element
+  })
+}
+
+getComponent().then(res => {
+  document.body.appendChild(res)
+})
+```
 
 #### 4.4 SplitChunksPlugin 配置参数详解
 
+```javascript
+yarn add --dev @babel/plugin-syntax-dynamic-import
+```
+
+```javascript
+optimization: {
+    splitChunks: {
+      // 配置所选的代码 "initial"同步代码 "async" 异步代码 "all"所有代码
+      chunks: 'all',
+      // 代码分割的最小大小 30kb
+      minSize: 30000,
+      // 代码分割的最大大小 50kb
+      // maxSize: 50000,
+      // 拆分前共享模块的最小次数
+      minChunks: 1,
+      // 入口点处的最大并行请求数
+      maxAsyncRequests: 5,
+      // 按需加载时的最大并行请求数
+      maxInitialRequests: 3,
+      // 默认情况下，webpack将使用原点和块名称生成名称，如vendors~main.js
+      automaticNameDelimiter: '~',
+      // 根据块和缓存组键自动选择名称，否则可以传递字符串或函数。
+      name: true,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          // 优先级
+          priority: -10,
+          filename: 'vendors.js'
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          // 当模块完全匹配时，该选项允许重用现有块而不是创建新块。
+          reuseExistingChunk: true,
+          filename: 'common.js'
+        }
+      }
+    }
+}
+```
+
 #### 4.5 Lazy Loading 懒加载，Chunk 是什么？
+
+懒加载 `import`异步加载 `js`
+
+打包生成的每一个js文件就是一个Chunk
 
 #### 4.6 打包分析，Preloading，Prefetching
 
+如果我们以分离代码作为开始，那么就以检查模块作为结束，分析输出结果是很有用处的。[官方分析工具](https://github.com/webpack/analyse) 是一个好的初始选择。下面是一些社区支持(community-supported)的可选工具：
+
+- [webpack-chart](https://alexkuz.github.io/webpack-chart/): webpack 数据交互饼图。
+- [webpack-visualizer](https://chrisbateman.github.io/webpack-visualizer/): 可视化并分析你的 bundle，检查哪些模块占用空间，哪些可能是重复使用的。
+- [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer): 一款分析 bundle 内容的插件及 CLI 工具，以便捷的、交互式、可缩放的树状图形式展现给用户。
+
+webpack 4.6.0+增加了对预取和预加载的支持。
+
+在声明导入时使用这些内联指令允许webpack输出“Resource Hint”，它告诉浏览器：
+
+- preloading：当前导航期间可能需要资源    立马想要的资源
+- prefetching：将来某些导航可能需要资源   暂时不需要的资源
+
+> 小技巧：chorme浏览器 `ctrl+shitf+p` `coverage`分析代码使用率
+
 #### 4.7 Css 文件的代码分割
+
+
 
 #### 4.8 Webpack与浏览器缓存
 
