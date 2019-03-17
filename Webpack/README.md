@@ -484,11 +484,97 @@ webpack 4.6.0+增加了对预取和预加载的支持。
 
 #### 4.7 Css 文件的代码分割
 
+```javascript
+  output: {
+    filename: '[name].js',//此选项决定了每个输出 bundle 的名称。
+    chunkFilename: '[name].chunk.js',//此选项决定了非入口(non-entry) chunk 文件的名称。
+    path: resolve('./dist')
+  },
+```
 
+`mini-css-extract-plugin` 插件的使用
+
+只能使用在线上环境，暂不支持HMR
+
+```javascript
+yarn add --dev mini-css-extract-plugin optimize-css-assets-webpack-plugin
+```
+
+webpack.prod.conf.js
+
+```javascript
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+
+module.exports = {
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true
+        }
+      }
+    }
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+    })
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader"
+        ]
+      }
+    ]
+  },
+  optimization: {
+    minimizer: [
+      new OptimizeCSSAssetsPlugin({})
+    ]
+  }  
+}
+```
 
 #### 4.8 Webpack与浏览器缓存
 
+```javascript
+  performance: false//关闭webpack打包警告
+```
+
+```javascript
+  output: {
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].js',
+  },
+```
+
+`contenthash`如果代码有变更，hash值会变化。
+
 #### 4.9 Shimming 的作用
+
+> `webpack` 编译器(compiler)能够识别遵循 ES2015 模块语法、CommonJS 或 AMD 规范编写的模块。然而，一些第三方的库(library)可能会引用一些全局依赖（例如 `jQuery` 中的 `$`）。这些库也可能创建一些需要被导出的全局变量。这些“不符合规范的模块”就是 *shimming* 发挥作用的地方。
+
+```javascript
+const webpack = require('webpack')
+
+new webpack.ProvidePlugin({
+  $: 'jquery',
+  _: 'lodash',    
+})
+
+
+export function ui () {
+  $('body').css('background', _.join(['orange'], ''))
+}
+```
 
 #### 4.10 环境变量的使用方法
 
