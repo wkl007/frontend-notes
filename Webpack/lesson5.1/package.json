@@ -1,0 +1,17 @@
+{
+  "name": "library",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/library.js",
+  "private": true,
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "wkl",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}

@@ -582,15 +582,100 @@ export function ui () {
 
 #### 5.1 Library 的打包
 
+```javascript
+const path = require('path')
+
+module.exports = {
+  mode: 'production',
+  entry: './src/index.js',
+  externals: ['lodash'],//配置选项提供了「从输出的 bundle 中排除依赖」的方法。相反，所创建的 bundle 依赖于那些存在于用户环境(consumer's environment)中的依赖。
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'library.js',
+    library: 'library',
+    libraryTarget: 'umd',//将你的 library 暴露为所有的模块定义下都可运行的方式。它将在 CommonJS, AMD 环境下运行，或将模块导出到 global 下的变量
+  }
+}
+```
+
 #### 5.2 PWA 的打包配置
+
+```javascript
+yarn add --dev workbox-webpack-plugin
+```
+
+```javascript
+const WorkboxPlugin = require('workbox-webpack-plugin')
+
+new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true
+})
+```
 
 #### 5.3 TypeScript 的打包配置
 
+```javascript
+const path = require('path')
+
+module.exports = {
+  mode: 'production',
+  entry: './src/index.tsx',
+  module: {
+    rules: [{
+      test: /\.tsx?$/,
+      use: 'ts-loader',
+      exclude: /node_modules/
+    }]
+  },
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  }
+}
+```
+
 #### 5.4 使用WebpackDevServer 实现请求转发
+
+```javascript
+	devServer: {
+		contentBase: './dist',
+		open: true,
+		port: 8080,
+		hot: true,
+		hotOnly: true,
+		proxy: {
+			'/react/api': {
+				target: 'http://www.dell-lee.com',
+				secure: false,
+				pathRewrite: {
+					'header.json': 'demo.json'
+				},
+				changeOrigin: true,//突破origin限制
+				headers: {
+					host: 'www.dell-lee.com',
+				}
+			}
+		}
+	},
+```
 
 #### 5.5 WebpackDevServer 解决单页面应用路由问题
 
+```javascript
+	devServer: {
+		contentBase: './dist',
+		open: true,
+		port: 8080,
+		hot: true,
+		hotOnly: true,
+		historyApiFallback: true,//当使用 HTML5 History API 时，任意的 404 响应都可能需要被替代为 index.html。
+	},
+```
+
 #### 5.6 EsLint 在 Webpack 中的配置
+
+
 
 #### 5.7 Webpack 性能优化
 
