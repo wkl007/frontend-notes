@@ -675,11 +675,208 @@ module.exports = {
 
 #### 5.6 EsLint 在 Webpack 中的配置
 
+```javascript
+yarn add --dev eslint
 
+npx eslint --init
+```
+
+```javascript
+devServer: {
+	overlay:true,//展示错误弹窗
+	contentBase: './dist',
+	open: true,
+	port: 8080,
+	hot: true,
+	hotOnly: true,
+	historyApiFallback: true,
+},
+        
+{ 
+	test: /\.js$/, 
+	exclude: /node_modules/,
+	use: ['babel-loader', 'eslint-loader']
+},
+```
+
+```js
+module.exports = {
+  'extends': 'airbnb',
+  'parser': 'babel-eslint',
+  'rules': {
+    'react/prefer-stateless-function': 0,
+    'react/jsx-filename-extension': 0
+  },
+  globals: {
+    document: false
+  }
+}
+```
 
 #### 5.7 Webpack 性能优化
 
+##### 5.7.1 跟上技术的迭代(Node,Npm,Yarn)
+
+##### 5.7.2 在尽可能少的模块上应用Loader
+
+##### 5.7.3 Plugin 尽可能精简并确保可靠
+
+##### 5.7.4 resolve 参数合理配置
+
+```javascript
+  resolve: {
+    extensions: ['.js', '.jsx'],
+    alias: {
+      child: path.resolve(__dirname, '../src/a/b/c/child')
+    }
+  },
+```
+
+##### 5.7.5 dllPlugin的使用
+
+> 目标：第三方模块只打包一次
+>
+> 1. 第三方模块打包一次
+> 2. 引入第三方模块的时候，要去使用dll文件引入
+
+`webpack.dll.conf.js`配置
+
+```javascript
+const path = require('path')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const webpack = require('webpack')
+
+function resolve (dir) {
+  return path.join(__dirname, '..', dir)
+}
+
+module.exports = {
+  mode: 'production',
+  entry: {
+    lodash: ['lodash'],
+    react: ['react', 'react-dom'],
+    jquery: ['jquery']
+  },
+  output: {
+    filename: '[name].dll.js',
+    path: resolve('./dll'),
+    library: '[name]'
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new webpack.DllPlugin({
+      name: '[name]',
+      path: resolve('./dll/[name].manifest.json')
+    })
+  ]
+}
+```
+
+`webpack.base.conf.js`配置
+
+```javascript
+const webpack = require('webpack')
+const fs = require('fs')
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+
+function resolve (dir) {
+  return path.join(__dirname, '..', dir)
+}
+
+const plugins = [
+  new HtmlWebpackPlugin({
+    template: './index.html'
+  }),
+  new CleanWebpackPlugin(),
+]
+
+const files = fs.readdirSync(resolve('./dll'))
+
+files.forEach(file => {
+  if (/.*\.dll.js/.test(file)) {
+    plugins.push(
+      new AddAssetHtmlWebpackPlugin({
+        filepath: resolve(`./dll/${file}`)
+      }),
+    )
+  }
+  if (/.*\.manifest.json/.test(file)) {
+    plugins.push(
+      new webpack.DllReferencePlugin({
+        manifest: resolve(`./dll/${file}`)
+      })
+    )
+  }
+})
+
+module.exports = {
+  ...,
+  plugins,
+  ...
+}
+```
+
+##### 5.7.6 控制包文件大小
+
+##### 5.7.7 thread-loader,parallel-webpack,happypack 多线程打包
+
+##### 5.7.8 合理使用 sourceMap
+
+##### 5.7.9 结合 stats 分析打包结果
+
+##### 5.7.10 开发环境内存编译
+
+##### 5.7.11 开发环境无用插件剔除
+
 #### 5.8 多页面打包配置
+
+`webpack.base.conf.js`配置
+
+```javascript
+...
+
+const makePlugins = (configs) => {
+  const plugins = [
+    new CleanWebpackPlugin(),
+  ]
+
+  Object.keys(configs.entry).forEach(item => {
+    plugins.push(
+      new HtmlWebpackPlugin({
+        template: './index.html',
+        filename: `${item}.html`,
+        chunks: ['runtime', 'vendors', item]
+      }),
+    )
+  })
+
+  const files = fs.readdirSync(resolve('./dll'))
+
+  files.forEach(file => {
+    if (/.*\.dll.js/.test(file)) {
+      plugins.push(
+        new AddAssetHtmlWebpackPlugin({
+          filepath: resolve(`./dll/${file}`)
+        }),
+      )
+    }
+    if (/.*\.manifest.json/.test(file)) {
+      plugins.push(
+        new webpack.DllReferencePlugin({
+          manifest: resolve(`./dll/${file}`)
+        })
+      )
+    }
+  })
+
+  return plugins
+}
+
+...
+```
 
 ### 6. Webpack 底层原理及脚手架工具分析
 
