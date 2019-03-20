@@ -882,9 +882,90 @@ const makePlugins = (configs) => {
 
 #### 6.1 如何编写一个Loader
 
+`replaceLoader.js` 
+
+```javascript
+const loaderUtils = require('loader-utils')
+
+module.exports = function (source) {
+  // 获取loader中的参数
+  console.log(this.query)
+  const options = loaderUtils.getOptions(this);
+  console.log(options)
+    
+  return source.replace('小王', '老王')
+}
+```
+
+`webpack.config.js`
+
+```javascript
+module: {
+    resolveLoader: {
+      modules: ['node_modules', './loaders']
+    },
+    rules: [
+      {
+        test: /\.js/,
+        use: [
+            {
+            loader: 'replaceLoader',
+            options: {
+              name: '小黑'
+            }
+          },
+        ]
+      }
+    ]
+  }
+```
+
 #### 6.2 如何编写一个Plugin
 
+`copyright-webpack-plugin.js`
+
+```javascript
+class CopyrightWebpackPlugin {
+  constructor (options) {
+    console.log(options)
+  }
+
+  apply (compiler) {
+    compiler.hooks.compile.tap('CopyrightWebpackPlugin', (compilation) => {
+      console.log('compiler')
+    })
+
+    compiler.hooks.emit.tapAsync('CopyrightWebpackPlugin', (compilation, cb) => {
+        compilation.assets['copyright.txt'] = {
+          source: function () {
+            return 'copyright by wkl'
+          },
+          size: function () {
+            return 21
+          }
+        }
+        cb()
+      }
+    )
+  }
+}
+
+module.exports = CopyrightWebpackPlugin
+```
+
+`webpack.config.js`
+
+```javascript
+const CopyRightWebpackPlugin = require('./plugins/copyright-webpack-plugin')
+ 
+plugins: [
+    new CopyRightWebpackPlugin()
+]
+```
+
 #### 6.3 Bundler 源码编写
+
+
 
 ### 7. Create-React-App 和 Vue-Cli 3.0 脚手架工具配置分析
 
