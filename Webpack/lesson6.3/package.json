@@ -1,0 +1,17 @@
+{
+  "name": "bundler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node bundler.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/parser": "^7.4.0",
+    "@babel/preset-env": "^7.4.1",
+    "@babel/traverse": "^7.4.0"
+  }
+}
