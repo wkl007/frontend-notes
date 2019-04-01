@@ -139,26 +139,27 @@ str1 instanceof String // true
 
  [JS原型与原型链](https://blog.csdn.net/qq_35844177/article/details/75209063)
 
-#### 1.9 函数节流与函数防抖
+#### 1.9 函数截流与函数防抖
 
-> 面试题：什么是节流与防抖？
+> 面试题：什么是截流与防抖？
 
 简单而言，节流适合大量事件按时间做平均分配触发，防抖适合多次事件一次响应的情况。
 
 ```javascript
 /**
  * 截流
- * @param func 用户传入需要截流的函数
- * @param wait 等待时间
+ * 适合大量事件按时间做平均分配触发
+ * @param func
+ * @param wait
  * @returns {Function}
  */
-export function throttle (func, gapTime) {
-  let _lastTime = null
-
+export function throttle (func, wait) {
+  let lastTime = 0
+  
   return function (...args) {
-    let _nowTime = +new Date()
-    if (_nowTime - _lastTime > gapTime || !_lastTime) {
-      _lastTime = _nowTime
+    let nowTime = +new Date()
+    if (nowTime - lastTime > wait) {
+      lastTime = nowTime
       func.apply(this, args)
     }
   }
@@ -166,19 +167,19 @@ export function throttle (func, gapTime) {
 
 /**
  * 防抖
+ * 适合多次事件一次响应的情况
  * @param func 用户传入需要防抖的函数
  * @param wait 等待时间
  * @returns {Function}
  */
-export function debounce (func, delay) {
+export function debounce (func, wait) {
   let timer
-
   return function (...args) {
     if (timer) clearTimeout(timer)
 
     timer = setTimeout(() => {
       func.apply(this, args)
-    }, delay)
+    }, wait)
   }
 }
 ```
@@ -297,6 +298,13 @@ child instanceof Parent // true
 ##### CommonJS
 
 ##### Es Module
+
+ES Module 是原生实现的模块化方案，与 CommonJS 有以下几个区别
+
+- CommonJS 支持动态导入，也就是 `require(${path}/xx.js)`，后者目前不支持，但是已有提案
+- CommonJS 是同步导入，因为用于服务端，文件都在本地，同步导入即使卡住主线程影响也不大。而后者是异步导入，因为用于浏览器，需要下载文件，如果也采用同步导入会对渲染有很大影响
+- CommonJS 在导出时都是值拷贝，就算导出的值变了，导入的值也不会改变，所以如果想更新值，必须重新导入一次。但是 ES Module 采用实时绑定的方式，导入导出的值都指向同一个内存地址，所以导入值会跟随导出值变化
+- ES Module 会编译成 `require/exports` 来执行的
 
 ```javascript
 // 引入模块 API
@@ -462,7 +470,7 @@ console.log(it.next(13)) // => {value: 42, done: true}
 
 ### 5.  JS进阶知识点及常考面试题
 
-##### 5.1 instanceof 得原理
+##### 5.1 instanceof 的原理
 
 > 面试题：instanceof 的原理是什么？
 
