@@ -1,4 +1,47 @@
 /**
+ * 冒泡排序
+ * @param arr
+ * @returns {*}
+ */
+export function bubble (arr) {
+  let i, j, temp
+  for (i = 0; i < arr.length; i++) {
+    for (j = 0; j < arr.length - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        temp = arr[j]
+        arr[j] = arr[j + 1]
+        arr[j + 1] = temp
+      }
+    }
+  }
+  return arr
+}
+
+/**
+ * 快速排序
+ * @param arr
+ * @returns {T[] | string | T[] | Array|{length}|*}
+ */
+export function quickSort (arr) {
+  if (arr.length <= 1) return arr
+
+  let pivotIndex = Math.floor(arr.length / 2)
+  let pivot = arr.splice(pivotIndex, 1)[0]
+  let left = []
+  let right = []
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] < pivot) {
+      left.push(arr[i])
+    } else {
+      right.push(arr[i])
+    }
+  }
+
+  return quickSort(left).concat([pivot], quickSort(right))
+}
+
+/**
  * 截流
  * 适合大量事件按时间做平均分配触发
  * @param func
@@ -27,13 +70,103 @@ export function debounce (func, wait) {
   let timer
   return function (...args) {
     if (timer) clearTimeout(timer)
-
     timer = setTimeout(() => {
       func.apply(this, args)
     }, wait)
   }
 }
 
+/**
+ * 手写call
+ * @param context
+ * @returns {*}
+ */
+Function.prototype.myCall = function (context) {
+  if (typeof this !== 'function') {
+    throw new TypeError('Error')
+  }
+  context = context || window
+  context.fn = this
+  const args = [...arguments].slice(1)
+  const result = context.fn(...args)
+  delete context.fn
+  return result
+}
+
+/**
+ * 手写apply
+ * @param context
+ * @returns {*}
+ */
+Function.prototype.myApply = function (context) {
+  if (typeof this !== 'function') {
+    throw new TypeError('Error')
+  }
+  context = context || window
+  context.fn = this
+  let result
+  if (arguments[1]) {
+    result = context.fn(...arguments[1])
+  } else {
+    result = context.fn()
+  }
+  delete context.fn
+  return result
+}
+
+/**
+ * 手写bind
+ * @param context
+ * @returns {F}
+ */
+Function.prototype.myBind = function (context) {
+  if (typeof this !== 'function') {
+    throw new TypeError('Error')
+  }
+  const _this = this
+  const args = [...arguments].slice(1)
+  // 返回一个函数
+  return function F () {
+    // 因为返回了一个函数，我们可以 new F()，所以需要判断
+    if (this instanceof F) {
+      return new _this(...args, ...arguments)
+    }
+    return _this.apply(context, args.concat(...arguments))
+  }
+}
+
+/**
+ * 手写instanceof方法
+ * @param left
+ * @param right
+ * @returns {boolean}
+ */
+function myInstanceof (left, right) {
+  let prototype = right.prototype
+  left = left.__proto__
+  while (true) {
+    if (left === null || left === undefined) return false
+    if (prototype === left)
+      return true
+    left = left.__proto__
+  }
+}
+
+/**
+ * 阶乘方法
+ * @returns {boolean|number}
+ * @param n
+ */
+export function factorial (n) {
+  if (n < 0) return false
+  if (n === 0 || n === 1) return 1
+  return n * factorial(n - 1)
+}
+
+/**
+ * 手写promise
+ * @type {string}
+ */
 const PENDING = 'pending'
 const RESOLVE = 'resolve'
 const REJECT = 'reject'
@@ -98,58 +231,3 @@ new MyPromise((resolve, reject) => {
 }).then(res => {
   console.log(res)
 }, err => {})
-
-Function.prototype.myCall = function (context) {
-  if (typeof this !== 'function') {
-    throw new TypeError('Error')
-  }
-  context = context || window
-  context.fn = this
-  const args = [...arguments].slice(1)
-  const result = context.fn(...args)
-  delete context.fn
-  return result
-}
-
-Function.prototype.myApply = function (context) {
-  if (typeof this !== 'function') {
-    throw new TypeError('Error')
-  }
-  context = context || window
-  context.fn = this
-  let result
-  if (arguments[1]) {
-    result = context.fn(...arguments[1])
-  } else {
-    result = context.fn()
-  }
-  delete context.fn
-  return result
-}
-
-Function.prototype.myBind = function (context) {
-  if (typeof this !== 'function') {
-    throw new TypeError('Error')
-  }
-  const _this = this
-  const args = [...arguments].slice(1)
-  // 返回一个函数
-  return function F () {
-    // 因为返回了一个函数，我们可以 new F()，所以需要判断
-    if (this instanceof F) {
-      return new _this(...args, ...arguments)
-    }
-    return _this.apply(context, args.concat(...arguments))
-  }
-}
-
-function myInstanceof (left, right) {
-  let prototype = right.prototype
-  left = left.__proto__
-  while (true) {
-    if (left === null || left === undefined) return false
-    if (prototype === left)
-      return true
-    left = left.__proto__
-  }
-}
