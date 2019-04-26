@@ -379,3 +379,21 @@ Dart 枚举特性
 - 类的泛型
 - 方法的泛型
 
+```dart
+class Utils<T> {
+  T element;
+
+  void put(T element) {
+    this.element = element;
+  }
+}
+
+class Util {
+  void put<T>(T element) {
+    print(element);
+  }
+}
+```
+
+T只是具体类型的替身，在使用时会用具体的类型替换掉这个T。
+
