@@ -18,8 +18,8 @@ pip install shadowsocks
 CentOS:
 
 ```shell
-sudo yum install python-setuptools && easy_install pip
-sudo pip install shadowsocks
+yum install python-setuptools && easy_install pip
+pip install shadowsocks
 ```
 
 #### 配置
@@ -27,7 +27,7 @@ sudo pip install shadowsocks
 找个地方放`shadowsocks`的配置文件，我选择放到 `/etc/shadowsocks`下面：
 
 ```shell
-sudo vim /etc/shadowsocks/shadowsocks.json
+vim /etc/shadowsocks/shadowsocks.json
 ```
 
 ```json
