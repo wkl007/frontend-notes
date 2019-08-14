@@ -112,6 +112,13 @@ map操作
 
 动态类型可以赋予不同的值
 
+#### 2.8 dynamic、var、object三者区别
+
+- dynamic：是所有Daret对象的基础类型，在大多数情况下，通常不直接使用它。通过它定义的变量会关闭类型检查，这意味着`dynamic x='hal';x.foo();`这段代码静态类型检查不会报错，但是运行时会crash，因为x并没有foo方法，所以建议大家在编程时不要直接使用dynamic；
+- var：是一个关键字，意思是“我不关心这里的类型是什么。”，系统会自动推断类型runtimeType；
+- Object：是Dart对象的基类，当你定义：`Object o=xxx;`时这时候系统会认为o是个对象，你可以调用o的toString()和hashCode()方法。因为Object提供了这些方法，但是如果你尝试调用o.foo()时，静态类型检查会进行报错；
+  综上不难看出dynamic与Object的最大的区别是在静态类型检查上；
+
 ### 3. 运算符
 
 #### 3.1 算术运算符
@@ -396,4 +403,28 @@ class Util {
 ```
 
 T只是具体类型的替身，在使用时会用具体的类型替换掉这个T。
+
+### 8. 编程技巧
+
+#### 8.1 安全调用
+
+对于不确定是否为空的对象可以通过`?.`的方式来方位它的属性和方法以防止空异常如： `a?.foo()`
+
+#### 8.2 设置默认值
+
+善用`??`设置默认值`print(list?.length ?? 0);` 
+
+#### 8.3 简化判断
+
+```dart
+// before
+if (list[0] == null || list[0] == '' || list[0] == 0) {
+   print('list[0] is empty');
+}
+
+// after
+if ([null, '', 0].contains(list[0])) {
+   print('list[0] is empty');
+}
+```
 
