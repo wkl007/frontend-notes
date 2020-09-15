@@ -561,3 +561,34 @@ var worldPosition = new THREE.Vector3();
 mesh.getWorldPosition(worldPosition);
 ```
 
+## 7. 几何体对象、曲线、三维建模
+
+### 7.1 常见几何体和曲线`API`介绍
+
+几何体
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200915171040.png" alt="image-20200915170946756" style="zoom:80%;" />
+
+曲线
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200915171047.png" alt="image-20200915171028801" style="zoom:80%;" />
+
+### 7.2 圆弧线绘制（直线、椭圆、圆弧、基类Curve）
+
+### 7.3 样条曲线、贝塞尔曲线
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200915173719.png" alt="image-20200915173717775" style="zoom:80%;" />
+
+### 7.4 多个线条组合曲线CurvePath
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200915182233.png" alt="image-20200915182232769" style="zoom:80%;" />
+
+### 7.5 曲线路径管道成型
+
+### 7.6 旋转成型
+
+### 7.7 Shape对象和轮廓填充ShapeGemoetry
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200915190044.png" alt="image-20200915190041511" style="zoom:80%;" />
+
+### 7.8 拉伸扫描成型
