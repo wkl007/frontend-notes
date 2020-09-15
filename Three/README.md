@@ -449,3 +449,115 @@ material.opacity = 0.4
 ### 5.2 基类`Light`和`Object3D`
 
 <img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200915152941.png" alt="image-20200915152940805" style="zoom:80%;" />
+
+## 6. 层级模型、树结构
+
+### 6.1 组对象`Group`、层级模型
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200915154540.png" alt="image-20200915154536830" style="zoom:80%;" />
+
+Group案例
+
+```javascript
+  const geometry = new THREE.BoxGeometry(20, 20, 20)
+  const material = new THREE.MeshLambertMaterial({ color: 0x0000ff })
+  const group = new THREE.Group()
+  const mesh1 = new THREE.Mesh(geometry, material)
+  const mesh2 = new THREE.Mesh(geometry, material)
+  mesh2.translateX(25)
+  // 把mesh1型插入到组group中，mesh1作为group的子对象
+  group.add(mesh1)
+  // 把mesh2型插入到组group中，mesh2作为group的子对象
+  group.add(mesh2)
+  // 把group插入到场景中作为场景子对象
+  scene.add(group)
+
+  group.translateY(100) // 沿着Y轴平移mesh1和mesh2的父对象，mesh1和mesh2跟着平移
+  group.scale.set(4, 4, 4) // 父对象缩放，子对象跟着缩放
+  group.rotateY(Math.PI / 6) // 父对象旋转，子对象跟着旋转
+```
+
+查看子对象`.children`
+
+```javascript
+  console.log('查看group的子对象', group.children)
+```
+
+场景对象结构
+
+```javascript
+  console.log('查看Scene的子对象', scene.children)
+```
+
+.add方法
+
+```javascript
+  group.add(mesh1,mesh2)
+```
+
+.remove方法
+
+```javascript
+  group.remove(mesh1)
+```
+
+### 6.2 对象节点命名、查找、遍历
+
+模型命名
+
+```javascript
+group.add(Mesh)
+// 网格模型命名
+Mesh.name = "眼睛"
+// mesh父对象对象命名
+group.name = "头"
+```
+
+递归遍历方法`.traverse()`
+
+```javascript
+scene.traverse(function(obj) {
+  if (obj.type === "Group") {
+    console.log(obj.name);
+  }
+  if (obj.type === "Mesh") {
+    console.log('  ' + obj.name);
+    obj.material.color.set(0xffff00);
+  }
+  if (obj.name === "左眼" | obj.name === "右眼") {
+    obj.material.color.set(0x000000)
+  }
+  // 打印id属性
+  console.log(obj.id);
+  // 打印该对象的父对象
+  console.log(obj.parent);
+  // 打印该对象的子对象
+  console.log(obj.children);
+})
+```
+
+查找某个具体的模型
+
+```javascript
+// 遍历查找scene中复合条件的子对象，并返回id对应的对象
+var idNode = scene.getObjectById ( 4 )
+console.log(idNode)
+```
+
+```javascript
+// 遍历查找对象的子对象，返回name对应的对象（name是可以重名的，返回第一个）
+var nameNode = scene.getObjectByName ( "左腿" )
+nameNode.material.color.set(0xff0000)
+```
+
+### 6.3 本地位置坐标、世界位置坐标
+
+`.getWorldPosition()`方法
+
+```javascript
+// 声明一个三维向量用来保存世界坐标
+var worldPosition = new THREE.Vector3();
+// 执行getWorldPosition方法把模型的世界坐标保存到参数worldPosition中
+mesh.getWorldPosition(worldPosition);
+```
+
