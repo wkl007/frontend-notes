@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>canvas画布作为纹理贴图</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+<script src="https://cache-1256738511.cos.ap-chengdu.myqcloud.com/files/three/build/three.min.js"></script>
+<script
+  src="https://cache-1256738511.cos.ap-chengdu.myqcloud.com/files/three/examples/js/controls/OrbitControls.js"></script>
+<script>
+  /*
+  * 创建场景对象
+  * */
+  const scene = new THREE.Scene()
+  const geometry = new THREE.PlaneGeometry(128, 32) // 矩形平面
+  /*
+  * 创建一个canvas对象，并绘制一些轮廓
+  * */
+  const canvas = document.createElement('canvas')
+  canvas.width = 512
+  canvas.height = 128
+  const c = canvas.getContext('2d')
+  // 矩形区域填充背景
+  c.fillStyle = '#ff00ff'
+  c.fillRect(0, 0, 512, 128)
+  c.beginPath()
+  // 文字
+  c.beginPath()
+  c.translate(256, 64)
+  c.fillStyle = '#000000' //文本填充颜色
+  c.font = 'bold 48px 宋体' //字体样式设置
+  c.textBaseline = 'middle' //文本与fillText定义的纵坐标
+  c.textAlign = 'center' //文本居中(以fillText定义的横坐标)
+  c.fillText('wkl007', 0, 0)
+  /*const img = new Image()
+  img.src = 'https://cache-1256738511.cos.ap-chengdu.myqcloud.com/images/gril.jpg'
+  img.onload = function () {
+    c.fillStyle = c.createPattern(img, 'no-repeat')
+    c.fillRect(0, 0, 512, 128)
+    // 注意图片加载完成执行canvas相关方法后，要更新一下纹理
+    // texture.needsUpdate = true
+  }*/
+
+  // canvas画布对象作为CanvasTexture的参数重建一个纹理对象
+  // canvas画布可以理解为一张图片
+  const texture = new THREE.CanvasTexture(canvas)
+  const material = new THREE.MeshPhongMaterial({ map: texture, transparent: true })
+
+  // 设置数组材质对象作为网格模型材质参数
+  const mesh = new THREE.Mesh(geometry, material)
+  scene.add(mesh)
+
+  // 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
+  const axesHelper = new THREE.AxesHelper(250)
+  scene.add(axesHelper)
+
+  /*
+  * 光源设置
+  * */
+  // 点光源
+  const point = new THREE.PointLight(0xffffff)
+  point.position.set(400, 200, 300) // 点光源位置
+  scene.add(point) // 点光源添加到场景中
+  //环境光
+  const ambient = new THREE.AmbientLight(0xaaaaaa)
+  scene.add(ambient)
+
+  /*
+  * 透视投影相机设置
+  * */
+  const width = window.innerWidth //窗口宽度
+  const height = window.innerHeight //窗口高度
+  const k = width / height //窗口宽高比
+  const s = 150 //三维场景缩放系数
+  // 创建相机
+  const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000)
+  camera.position.set(200, 300, 200) // 设置相机位置
+  camera.lookAt(scene.position) // 设置相机方向(指向的场景对象)
+  /*
+  * 创建渲染器对象
+  * */
+  const renderer = new THREE.WebGLRenderer({ antialias: true })
+  renderer.setSize(width, height) // 设置渲染区域尺寸
+  renderer.setClearColor(0xb9d3ff) // 设置背景颜色
+  document.body.appendChild(renderer.domElement) // body元素中插入canvas对象
+
+  function render () {
+    renderer.render(scene, camera) // 执行渲染操作
+    requestAnimationFrame(render)
+  }
+
+  render()
+  const controls = new THREE.OrbitControls(camera, renderer.domElement) // 创建控件对象
+  // controls.addEventListener('change', render)//监听鼠标、键盘事件
+
+</script>
+</body>
+</html>

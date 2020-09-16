@@ -592,3 +592,25 @@ mesh.getWorldPosition(worldPosition);
 <img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200915190044.png" alt="image-20200915190041511" style="zoom:80%;" />
 
 ### 7.8 拉伸扫描成型
+
+## 8. 纹理贴图
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200916114126.png" alt="image-20200916114125178" style="zoom:80%;" />
+
+### 8.1 创建纹理贴图
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200916141538.png" alt="image-20200916141537848" style="zoom:80%;" />
+
+### 8.2 几何体顶点纹理坐标UV
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200916141925.png" alt="image-20200916141924494" style="zoom:80%;" />
+
+### 8.3 数组材质、材质索引
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200916150643.png" alt="image-20200916150641205" style="zoom:80%;" />
+
+### 8.4 纹理对象Texture(阵列、偏移、旋转)
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200916162304.png" alt="image-20200916162303297" style="zoom:80%;" />
+
+### 8.5 canvas画布、视频作为纹理贴图
