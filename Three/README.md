@@ -614,3 +614,15 @@ mesh.getWorldPosition(worldPosition);
 <img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200916162304.png" alt="image-20200916162303297" style="zoom:80%;" />
 
 ### 8.5 canvas画布、视频作为纹理贴图
+
+### 8.6 凹凸贴图`bumpMap`和法线贴图`.normalMap`
+
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200917084352.png" alt="image-20200917084351463" style="zoom:80%;" />
+
+### 8.7 光照贴图添加阴影
+
+### 8.8 高光贴图
+
+### 8.9 环境贴图
+
+### 8.10 数据纹理对象
