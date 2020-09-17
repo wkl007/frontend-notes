@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PlaneGeometry实现中国城市PM2.5</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+<script src="https://cache-1256738511.cos.ap-chengdu.myqcloud.com/files/three/build/three.min.js"></script>
+<script
+  src="https://cache-1256738511.cos.ap-chengdu.myqcloud.com/files/three/examples/js/controls/OrbitControls.js"></script>
+<script>
+  /*
+  * 创建场景对象
+  * */
+  const scene = new THREE.Scene()
+  /*
+  * 创建一个草地平面
+  * */
+  const geometry = new THREE.PlaneGeometry(1000, 1000) // 矩形平面
+  // 加载草地纹理贴图
+  const texture = new THREE.TextureLoader().load('https://cache-1256738511.cos.ap-chengdu.myqcloud.com/images/grass.jpg')
+  // 设置纹理的重复模式
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
+  // uv两个方向纹理重复数量
+  texture.repeat.set(10, 10)
+  const material = new THREE.MeshLambertMaterial({
+    map: texture,
+    color: 0x777700
+  })
+  const mesh = new THREE.Mesh(geometry, material) // 网格模型对象Mesh
+  scene.add(mesh) // 网格模型添加到场景中
+  mesh.rotateX(-Math.PI / 2)
+
+  /*
+  * 精灵创建树林效果
+  * */
+  // 加载树纹理贴图
+  const textureTree = new THREE.TextureLoader().load('https://cache-1256738511.cos.ap-chengdu.myqcloud.com/images/tree.png')
+  for (let i = 0; i < 100; i++) {
+    const spriteMaterial = new THREE.SpriteMaterial({
+      map: textureTree
+    })
+    // 创建精灵模型对象
+    const sprite = new THREE.Sprite(spriteMaterial)
+    scene.add(sprite)
+    // 控制精灵大小
+    sprite.scale.set(100, 100, 1) // 只需要设置x、y两个分量就可以
+    const k1 = Math.random() - 0.5
+    const k2 = Math.random() - 0.5
+    // 设置精灵模型位置，在xoz平面上随机分布
+    sprite.position.set(1000 * k1, 50, 1000 * k2)
+  }
+
+  // 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
+  const axesHelper = new THREE.AxesHelper(200)
+  scene.add(axesHelper)
+  /*
+  * 光源设置
+  * */
+  //点光源
+  const point = new THREE.PointLight(0xffffff)
+  point.position.set(400, 200, 300) //点光源位置
+  scene.add(point) //点光源添加到场景中
+  //环境光
+  const ambient = new THREE.AmbientLight(0x888888)
+  scene.add(ambient)
+
+  /*
+  * 透视投影相机设置
+  * */
+  const width = window.innerWidth //窗口宽度
+  const height = window.innerHeight //窗口高度
+  const k = width / height //窗口宽高比
+  const s = 25 //三维场景显示范围控制系数，系数越大，显示的范围越大
+  //创建相机对象
+  const camera = new THREE.PerspectiveCamera(60, k, 1, 1000)
+  camera.position.set(200, 300, 200) //树上面观察
+  camera.lookAt(scene.position) //设置相机方向(指向的场景对象)
+  /*
+  * 创建渲染器对象
+  * */
+  renderer = new THREE.WebGLRenderer()
+  renderer.setSize(width, height) //设置渲染区域尺寸
+  renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
+  document.body.appendChild(renderer.domElement) // body元素中插入canvas对象
+
+  function render () {
+    renderer.render(scene, camera) // 执行渲染操作
+    requestAnimationFrame(render)
+  }
+
+  render()
+  const controls = new THREE.OrbitControls(camera, renderer.domElement) // 创建控件对象
+  // controls.addEventListener('change', render)//监听鼠标、键盘事件
+
+</script>
+</body>
+</html>

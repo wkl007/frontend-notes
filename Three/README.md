@@ -692,3 +692,15 @@ PerspectiveCamera( fov, aspect, near, far )
 | far    | far属性表示的是距离相机多远的位置截止渲染，如果设置的值偏小小，会有部分场景看不到 | 1000                                 |
 
 ### 9.2 窗口变化自适应渲染
+
+## 10. 精灵模型、粒子系统
+
+### 10.1 精灵模型对象Sprite
+
+### 10.2 中国城市PM2.5可视化案例
+
+### 10.3 精灵模型[Sprite](http://www.yanhuangxueyuan.com/threejs/docs/index.html#api/zh/objects/Sprite)模拟树林效果
+
+### 10.4 精灵模型[Sprite](http://www.yanhuangxueyuan.com/threejs/docs/index.html#api/zh/objects/Sprite)模拟下雨效果
+
+## 11. 帧动画模块
