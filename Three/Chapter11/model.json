@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "version": 4.5,
+    "type": "Object",
+    "generator": "Object3D.toJSON"
+  },
+  "geometries": [{
+    "uuid": "C099A4AA-CE0D-4105-AD2A-5977C797FB77",
+    "type": "BoxBufferGeometry",
+    "width": 1,
+    "height": 1,
+    "depth": 1,
+    "widthSegments": 1,
+    "heightSegments": 1,
+    "depthSegments": 1
+  }],
+  "materials": [{
+    "uuid": "22310FDC-DC18-4827-95F0-8524AB85C06D",
+    "type": "MeshStandardMaterial",
+    "color": 16777215,
+    "roughness": 0.5,
+    "metalness": 0.5,
+    "emissive": 0,
+    "depthFunc": 3,
+    "depthTest": true,
+    "depthWrite": true
+  }],
+  "object": {
+    "uuid": "7A9A8FDA-4124-48A0-88B7-6B0A518E4549",
+    "type": "Mesh",
+    "name": "Box",
+    "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    "geometry": "C099A4AA-CE0D-4105-AD2A-5977C797FB77",
+    "material": "22310FDC-DC18-4827-95F0-8524AB85C06D"
+  },
+  "animations": [{
+    "name": "default",
+    "fps": 24,
+    "tracks": [{
+      "type": "vector3",
+      "name": "Box.position",
+      "keys": [{
+        "value": [0, 0, 0],
+        "time": 0
+      }, {
+        "value": [-100, 0, 0],
+        "time": 50
+      }, {
+        "value": [-100,40, 0],
+        "time": 80
+      }, {
+        "value": [-100, 150, 0],
+        "time": 110
+      },{
+        "value": [0,100, 0],
+        "time": 140
+      }]
+    }, {
+      "type": "quaternion",
+      "name": "Box.quaternion",
+      "keys": [{
+        "value": [0, 0, 0, 0],
+        "time": 0
+      }, {
+        "value": [0, 0, 0, 0],
+        "time": 50
+      }, {
+        "value": [0, 0, 0, 0],
+        "time": 80
+      }, {
+        "value": [0, 0, 0, 1],
+        "time": 110
+      }]
+    },{
+      "type": "color",
+      "name": "Box.material.color",
+      "keys": [{
+        "value": [1, 0, 0, 1],
+        "time": 20
+      }, {
+        "value": [0, 1, 0, 1],
+        "time": 50
+      }, {
+        "value": [0, 0, 1, 1],
+        "time": 80
+      }, {
+        "value": [1, 0, 0, 1],
+        "time": 110
+      }, {
+        "value": [0, 1, 0, 1],
+        "time": 140
+      }]
+    }]
+  }]
+}

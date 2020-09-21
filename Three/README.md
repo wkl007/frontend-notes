@@ -717,6 +717,8 @@ PerspectiveCamera( fov, aspect, near, far )
 
 ### 12.1 骨骼动画原理
 
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200921103152.png" alt="image-20200921103143419" style="zoom:80%;" />
+
 ### 12.2 加载外部模型骨骼动画
 
 ### 12.3 变形目标动画原理

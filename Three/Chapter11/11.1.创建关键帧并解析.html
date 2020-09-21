@@ -44,7 +44,28 @@
   const times = [0, 10] // 关键帧时间数组，离散的时间点序列
   const values = [0, 0, 0, 150, 0, 0] // 与时间点对应的值组成的数组
   // 创建位置关键帧对象：0时刻对应位置0, 0, 0   10时刻对应位置150, 0, 0
+  const posTrack = new THREE.KeyframeTrack('box.position', times, values)
+  // 创建颜色关键帧对象：10时刻对应颜色1, 0, 0   20时刻对应颜色0, 0, 1
+  const colorKF = new THREE.KeyframeTrack('box.material.color', [10, 20], [1, 0, 0, 0, 0, 1])
+  // 创建名为Sphere对象的关键帧数据  从0~20时间段，尺寸scale缩放3倍
+  const scaleTrack = new THREE.KeyframeTrack('sphere.scale', [0, 20], [1, 1, 1, 3, 3, 3])
 
+  // duration决定了默认的播放时间，一般取所有帧动画的最大时间
+  // duration偏小，帧动画数据无法播放完，偏大，播放完帧动画会继续空播放
+  const duration = 20
+  const clip = new THREE.AnimationClip('default', duration, [posTrack, colorKF, scaleTrack])
+
+  /*
+  * 播放编辑好的关键帧数据
+  * */
+  // group作为混合器的参数，可以播放group中所有子对象的帧动画
+  const mixer = new THREE.AnimationMixer(group)
+  // 剪辑clip作为参数，通过混合器clipAction方法返回一个操作对象AnimationAction
+  const AnimationAction = mixer.clipAction(clip)
+  // 通过操作Action设置播放方式
+  AnimationAction.timeScale = 10 // 默认1，可以调节播放速度
+  // AnimationAction.loop = THREE.LoopOnce //不循环播放
+  AnimationAction.play() // 开始播放
 
   // 辅助坐标系  参数250表示坐标系大小，可以根据场景大小去设置
   const axesHelper = new THREE.AxesHelper(250)
@@ -79,9 +100,14 @@
   renderer.setClearColor(0xb9d3ff, 1) //设置背景颜色
   document.body.appendChild(renderer.domElement) // body元素中插入canvas对象
 
+  // 创建一个时钟对象Clock
+  const clock = new THREE.Clock()
+
   function render () {
     renderer.render(scene, camera) // 执行渲染操作
     requestAnimationFrame(render)
+
+    mixer.update(clock.getDelta())
   }
 
   render()
