@@ -21,3 +21,8 @@ yarn-error.log*
 *.sw?
 
 Three/three/*
+Three/ring/*
+Three/Chapter12/male/*
+Three/Chapter12/marine_anims_core.blend
+Three/Chapter12/marine_anims_core.json
+Three/Chapter12/MarineCv2_color.jpg
