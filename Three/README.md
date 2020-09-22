@@ -733,6 +733,8 @@ PerspectiveCamera( fov, aspect, near, far )
 
 ## 14. 模型文件加载
 
+<img src="https://pic-go-1256738511.cos.ap-chengdu.myqcloud.com/images/20200922104744.png" alt="image-20200922104742954" style="zoom:80%;" />
+
 ### 14.1 Three.js数据结构、导入导出
 
 ### 14.2 加载STL文件并解析
