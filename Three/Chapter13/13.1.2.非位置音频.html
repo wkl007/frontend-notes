@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>非位置音频</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+<button
+  onclick="pause()"
+  type="button"
+  style="position: absolute;padding: 10px"
+>
+  暂停/继续
+</button>
+<script src="https://cache-1256738511.cos.ap-chengdu.myqcloud.com/files/three/build/three.min.js"></script>
+<script>
+  function pause () {
+    if (audio.isPlaying) {
+      audio.pause()
+    } else {
+      audio.play()
+    }
+  }
+
+  /*
+  * 非位置音频可用于不考虑位置的背景音乐
+  * */
+
+  // 创建一个虚拟的监听者
+  const listener = new THREE.AudioListener()
+  // 创建一个非位置音频对象  用来控制播放
+  const audio = new THREE.Audio(listener)
+
+  // 创建一个音频加载器
+  const audioLoader = new THREE.AudioLoader()
+  audioLoader.load('https://cache-1256738511.cos.ap-chengdu.myqcloud.com/music/music.mp3', audioBuffer => {
+    audio.setBuffer(audioBuffer) // 音频缓冲区对象关联到音频对象audio
+    audio.setLoop(true) // 是否循环
+    audio.setVolume(1) // 音量
+  })
+</script>
+</body>
+</html>
